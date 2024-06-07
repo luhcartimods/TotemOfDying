@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "totemofdying:item/the_mad_totem"
+  }
+}

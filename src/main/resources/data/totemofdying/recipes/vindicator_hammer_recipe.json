@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "N": {
+      "item": "minecraft:netherite_block"
+    }
+  },
+  "pattern": [
+    "NNN",
+    "NSN",
+    " S "
+  ],
+  "result": {
+    "item": "totemofdying:vindicator_warhammer"
+  },
+  "show_notification": true
+}
