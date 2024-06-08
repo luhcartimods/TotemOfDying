@@ -17,6 +17,8 @@ public class ItemInit {
 
     public static final RegistryObject<Item> VINDICATOR_WARHAMMER = ITEMS.register("vindicator_warhammer", ()-> new AxeItem(Tiers.NETHERITE, 10.0F, -1.4F, (new Item.Properties().stacksTo(1))));
 
+    //Vindicator Hammer is just a hammer with 3d model like hammer in arcane (see recourses) and 15 damage and 2.6 attack speed
+
 
 
     public static void register(IEventBus eventBus) {

@@ -28,23 +28,28 @@ public class ModEventSubscriber {
             if (player.getMainHandItem().is(totem.getItem()) || player.getOffhandItem().is(totem.getItem())) { // Check if the player has the totem in their main hand or off hand
                 event.setCanceled(true);
 
+
+                //Normal totem things, gives the effects
                 player.setHealth(1.0F);
                 player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
 
+                //plays the totem sound on pop
                 Level level = player.level();
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, player.getSoundSource(), 1.0F, 1.0F);
 
+                //This is the actual animation, it can only be server side becuause otherwise game crash and mod is used on server
                 if (!level.isClientSide) {
                     Minecraft.getInstance().gameRenderer.displayItemActivation(totem);
-
+                    //This just checks if they have the totem in their main or off hand
                     if (player.getMainHandItem().is(totem.getItem())) {
                         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                     } else if (player.getOffhandItem().is(totem.getItem())) {
                         player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
                     }
 
+                    //Ok so this whole part just randomly selects the mobs and spawns them, not the cleanest code at all sorry
                     int numMobs = 13 + level.random.nextInt(6);
                     EntityType<?>[] mobTypes = {EntityType.PILLAGER, EntityType.EVOKER, EntityType.RAVAGER};
 

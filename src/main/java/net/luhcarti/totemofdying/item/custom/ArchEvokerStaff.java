@@ -16,6 +16,7 @@ public class ArchEvokerStaff extends Item {
         super(pProperties);
     }
 
+    //This just spawns a Evoker Fang and vex when used
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (!pLevel.isClientSide) {
