@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "totemofdying",
+  "version": "${version}",
+  "name": "Totem Of Dying",
+  "description": "",
+  "authors": [
+    "luhcarti"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.luhcarti.totemofdying.client.TotemOfDyingClient"
+    ],
+    "main": [
+      "net.luhcarti.totemofdying.TotemOfDying"
+    ]
+  },
+  "mixins": [
+    "totemofdying.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
