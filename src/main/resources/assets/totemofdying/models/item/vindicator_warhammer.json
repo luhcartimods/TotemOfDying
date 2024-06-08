@@ -1,18 +1,6 @@
 {
-  "parent": "minecraft:item/handheld",
-  "loader": "forge:separate_transforms",
-  "base": {
-    "parent": "totemofdying:item/vindicator_warhammer_3d"
-  },
-  "perspectives": {
-    "gui": {
-      "parent": "totemofdying:item/vindicator_warhammer_2d"
-    },
-    "ground": {
-      "parent": "totemofdying:item/vindicator_warhammer_3d"
-    },
-    "fixed": {
-      "parent": "totemofdying:item/vindicator_warhammer_3d"
-    }
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "totemofdying:item/vindicator_warhammer"
   }
 }

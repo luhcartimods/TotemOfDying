@@ -31,21 +31,4 @@ public class ArchEvokerStaff extends Item {
         }
         return super.use(world, user, hand);
     }
-
-    //This just spawns a Evoker Fang and vex when used
-//    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-//        if (!pLevel.isClientSide) {
-//            BlockPos pos = pPlayer.blockPosition().above();
-//
-//            Entity evokerFangs = EntityType.EVOKER_FANGS.create(pLevel);
-//            evokerFangs.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
-//            pLevel.addFreshEntity(evokerFangs);
-//
-//            Entity vex = EntityType.VEX.create(pLevel);
-//            vex.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
-//            pLevel.addFreshEntity(vex);
-//        }
-//
-//        return super.use(pLevel, pPlayer, pUsedHand);
-//    }
 }
