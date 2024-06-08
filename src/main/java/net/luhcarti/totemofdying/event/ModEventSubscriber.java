@@ -2,6 +2,8 @@ package net.luhcarti.totemofdying.event;
 
 import net.luhcarti.totemofdying.TotemOfDying;
 import net.luhcarti.totemofdying.item.ItemInit;
+import net.luhcarti.totemofdying.network.ModNetwork;
+import net.luhcarti.totemofdying.network.TotemActivationPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = TotemOfDying.MODID)
 public class ModEventSubscriber {
@@ -25,47 +28,50 @@ public class ModEventSubscriber {
     public static void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player player) {
             ItemStack totem = new ItemStack(ItemInit.THE_MAD_TOTEM.get());
-            if (player.getMainHandItem().is(totem.getItem()) || player.getOffhandItem().is(totem.getItem())) { // Check if the player has the totem in their main hand or off hand
+            //This checks if they have the totem, if they dont have the totem it wont save them
+            if (player.getMainHandItem().is(totem.getItem()) || player.getOffhandItem().is(totem.getItem())) {
                 event.setCanceled(true);
 
-
-                //Normal totem things, gives the effects
+                //Gives the standard totem effects
                 player.setHealth(1.0F);
                 player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
 
-                //plays the totem sound on pop
+                //Plays the totem sound
                 Level level = player.level();
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, player.getSoundSource(), 1.0F, 1.0F);
 
-                //This is the actual animation, it can only be server side becuause otherwise game crash and mod is used on server
+                //Checks if the player has the totem in their main or off hand, if they dont the totem doesnt totem
                 if (!level.isClientSide) {
-                    Minecraft.getInstance().gameRenderer.displayItemActivation(totem);
-                    //This just checks if they have the totem in their main or off hand
                     if (player.getMainHandItem().is(totem.getItem())) {
                         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                     } else if (player.getOffhandItem().is(totem.getItem())) {
                         player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
                     }
 
-                    //Ok so this whole part just randomly selects the mobs and spawns them, not the cleanest code at all sorry
+                    //This is for the animation, just sends the TotemActivationPacket to all connected clients
+                    ModNetwork.INSTANCE.send(PacketDistributor.ALL.noArg(), new TotemActivationPacket(player.getId()));
+
+                    //This is where I mean janky code, to explain it has these mobs and it spawns them on random so between 13-19 and randowm of the mobs, then just spawns
+                    //In intervals like a raid, very bad code sorry
                     int numMobs = 13 + level.random.nextInt(6);
                     EntityType<?>[] mobTypes = {EntityType.PILLAGER, EntityType.EVOKER, EntityType.RAVAGER};
 
-                    for (int i = 0; i < numMobs; i++) {
-                        EntityType<?> mobType = mobTypes[level.random.nextInt(mobTypes.length)];
-                        Mob mob = (Mob) mobType.create(level);
-                        mob.setPos(player.getX() + level.random.nextDouble() * 10 - 5, player.getY(), player.getZ() + level.random.nextDouble() * 10 - 5);
-                        mob.setTarget(player);
-                        level.addFreshEntity(mob);
-                    }
-                    for (int i = 0; i < 30; ++i) {
-                        double d0 = level.random.nextGaussian() * 0.02D;
-                        double d1 = level.random.nextGaussian() * 0.02D;
-                        double d2 = level.random.nextGaussian() * 0.02D;
-                        level.addParticle(ParticleTypes.TOTEM_OF_UNDYING, player.getX() + (double) (level.random.nextFloat() * player.getBbWidth() * 2.0F) - (double) player.getBbWidth(), player.getY() + 0.5D + (double) (level.random.nextFloat() * player.getBbHeight()), player.getZ() + (double) (level.random.nextFloat() * player.getBbWidth() * 2.0F) - (double) player.getBbWidth(), d0, d1, d2);
-                    }
+                    new Thread(() -> {
+                        try {
+                            for (int i = 0; i < numMobs; i++) {
+                                Thread.sleep(1000);
+                                EntityType<?> mobType = mobTypes[level.random.nextInt(mobTypes.length)];
+                                Mob mob = (Mob) mobType.create(level);
+                                mob.setPos(player.getX() + level.random.nextDouble() * 10 - 5, player.getY(), player.getZ() + level.random.nextDouble() * 10 - 5);
+                                mob.setTarget(player);
+                                level.addFreshEntity(mob);
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
                 }
             }
         }

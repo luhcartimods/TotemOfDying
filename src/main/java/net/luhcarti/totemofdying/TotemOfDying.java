@@ -2,6 +2,7 @@ package net.luhcarti.totemofdying;
 
 import com.mojang.logging.LogUtils;
 import net.luhcarti.totemofdying.item.ItemInit;
+import net.luhcarti.totemofdying.network.ModNetwork;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -35,6 +36,7 @@ public class TotemOfDying
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        ModNetwork.init();
     }
 
 
