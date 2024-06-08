@@ -1,27 +1,57 @@
 package net.luhcarti.totemofdying;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.luhcarti.totemofdying.event.OnDeathHandler;
+import com.mojang.logging.LogUtils;
 import net.luhcarti.totemofdying.item.ItemInit;
 import net.luhcarti.totemofdying.network.ModNetwork;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class TotemOfDying implements ModInitializer {
-    // This logger is used to write text to the console and the log file.
-    // It is considered best practice to use your mod id as the logger's name.
-    // That way, it's clear which mod wrote info, warnings, and errors.
-    public static final String MOD_ID = "totemofdying";
-    public static final Logger LOGGER = LoggerFactory.getLogger("totemofdying");
 
-    @Override
-    public void onInitialize() {
-        // This code runs as soon as Minecraft is in a mod-load-ready state.
-        // However, some things (like resources) may still be uninitialized.
-        // Proceed with mild caution.
-        ItemInit.registerModItems();
-        ModNetwork.registerC2SPackets();
-        ServerLivingEntityEvents.ALLOW_DEATH.register(new OnDeathHandler());
+@Mod(TotemOfDying.MODID)
+public class TotemOfDying
+{
+    public static final String MODID = "totemofdying";
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    public TotemOfDying()
+    {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modEventBus.addListener(this::commonSetup);
+
+        MinecraftForge.EVENT_BUS.register(this);
+
+        ItemInit.register(modEventBus);
+
+        modEventBus.addListener(this::addCreative);
+    }
+
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        ModNetwork.init();
+    }
+
+
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+    }
+
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event) {
+    }
+
+    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class ClientModEvents
+    {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+        }
     }
 }
