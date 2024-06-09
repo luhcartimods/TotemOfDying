@@ -21,7 +21,7 @@ public class TotemOfDying implements ModInitializer {
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
         ItemInit.registerModItems();
-        ModNetwork.registerC2SPackets();
         ServerLivingEntityEvents.ALLOW_DEATH.register(new OnDeathHandler());
+        ModNetwork.registerC2SPackets();
     }
 }
