@@ -33,27 +33,21 @@ public class ModEventSubscriber {
         if (event.getEntity() instanceof Player player) {
             ItemStack totem = new ItemStack(ItemInit.THE_MAD_TOTEM.get());
             //This checks if they have the totem, if they dont have the totem it wont save them
-            if (player.getMainHandItem().is(totem.getItem()) || player.getOffhandItem().is(totem.getItem())) {
+            if (getActiveTotemOfUndying(player) != null && !player.getCooldowns().isOnCooldown(totem.getItem())) {
                 event.setCanceled(true);
 
-                //Gives the standard totem effects
+                //Gives the standard totem effects and applies cooldown
                 player.setHealth(1.0F);
                 player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
+                player.getCooldowns().addCooldown(totem.getItem(), 600);
 
                 //Plays the totem sound
                 Level level = player.level();
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, player.getSoundSource(), 1.0F, 1.0F);
 
-                //Checks if the player has the totem in their main or off hand, if they dont the totem doesnt totem
                 if (!level.isClientSide) {
-                    if (player.getMainHandItem().is(totem.getItem())) {
-                        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-                    } else if (player.getOffhandItem().is(totem.getItem())) {
-                        player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-                    }
-
                     //This is for the animation, just sends the TotemActivationPacket to all connected clients
                     ModNetwork.INSTANCE.send(PacketDistributor.ALL.noArg(), new TotemActivationPacket(player.getId()));
 
@@ -82,5 +76,14 @@ public class ModEventSubscriber {
                 }
             }
         }
+    }
+
+    private static ItemStack getActiveTotemOfUndying(Player player) {
+        for (InteractionHand hand : InteractionHand.values()) {
+            ItemStack itemStack = player.getItemInHand(hand);
+            if (!itemStack.is(ItemInit.THE_MAD_TOTEM.get())) continue;
+            return itemStack;
+        }
+        return null;
     }
 }
