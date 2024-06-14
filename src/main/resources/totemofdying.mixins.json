@@ -6,9 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "ItemRendererAccessor",
-    "ItemRendererMixin",
-    "ModelLoaderMixin"
+    "ItemRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

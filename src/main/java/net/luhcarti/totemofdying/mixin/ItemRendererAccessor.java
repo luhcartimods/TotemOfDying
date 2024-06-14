@@ -1,4 +1,5 @@
 package net.luhcarti.totemofdying.mixin;
+
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.item.ItemRenderer;
 import org.spongepowered.asm.mixin.Mixin;
