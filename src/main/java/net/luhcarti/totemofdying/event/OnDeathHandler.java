@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.luhcarti.totemofdying.item.ItemInit;
 import net.luhcarti.totemofdying.network.ModNetwork;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -15,6 +16,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -25,8 +28,8 @@ public class OnDeathHandler implements ServerLivingEntityEvents.AllowDeath {
 
     @Override
     public boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damageAmount) {
-        if (damageSource.isOutOfWorld()) {
-            return false;
+        if (damageSource.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            return true;
         }
         if (entity instanceof PlayerEntity player) {
             ItemStack totem = new ItemStack(ItemInit.THE_MAD_TOTEM);
@@ -71,7 +74,6 @@ public class OnDeathHandler implements ServerLivingEntityEvents.AllowDeath {
                             e.printStackTrace();
                         }
                     }).start();
-
                 }
                 return false;
             }
