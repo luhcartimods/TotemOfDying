@@ -14,7 +14,7 @@ public class ItemInit {
     public static final Item STAFF_OF_THE_ARCH_REVOKER = registerItem("staff_of_the_arch_revoker", new ArchEvokerStaff(new FabricItemSettings()));
     public static final Item THE_MAD_TOTEM = registerItem("the_mad_totem", new Item(new FabricItemSettings().maxCount(1)));
 
-    public static final Item VINDICATOR_WARHAMMER = registerItem("vindicator_warhammer", new AxeItem(ToolMaterials.NETHERITE, 10.0F, -1.4F, new FabricItemSettings().maxCount(1)));
+    public static final Item VINDICATOR_WARHAMMER = registerItem("vindicator_warhammer", new AxeItem(ToolMaterials.NETHERITE, 10.0F, -4.3F, new FabricItemSettings().maxCount(1)));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(TotemOfDying.MOD_ID, name), item);

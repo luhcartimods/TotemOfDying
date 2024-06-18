@@ -16,6 +16,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -57,23 +58,11 @@ public class OnDeathHandler implements ServerLivingEntityEvents.AllowDeath {
                     int numMobs = 13 + world.random.nextInt(6);
                     EntityType<?>[] mobTypes = {EntityType.PILLAGER, EntityType.EVOKER, EntityType.RAVAGER};
 
-                    new Thread(() -> {
-                        try {
-                            for (int i = 0; i < numMobs; i++) {
-                                Thread.sleep(1000);
-                                EntityType<?> mobType = mobTypes[world.random.nextInt(mobTypes.length)];
-                                MobEntity mob = (MobEntity) mobType.create(world);
-                                mob.setPosition(player.getX() + world.random.nextDouble() * 10 - 5, player.getY(), player.getZ() + world.random.nextDouble() * 10 - 5);
-                                mob.setTarget(player.getAbilities().creativeMode ? null : player);
-                                if (mob instanceof PillagerEntity pillager) {
-                                    pillager.initialize((ServerWorldAccess) world, world.getLocalDifficulty(player.getSteppingPos()), SpawnReason.TRIGGERED, null, null);
-                                }
-                                world.spawnEntity(mob);
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }).start();
+                    for (int i = 0; i < numMobs; i++) {
+                        EntityType<?> mobType = mobTypes[world.random.nextInt(mobTypes.length)];
+                        ItemStack spawnEgg = new ItemStack(SpawnEggItem.forEntity(mobType));
+                        player.giveItemStack(spawnEgg);
+                    }
                 }
                 return false;
             }

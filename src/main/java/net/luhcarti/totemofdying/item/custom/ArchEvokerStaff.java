@@ -3,17 +3,20 @@ package net.luhcarti.totemofdying.item.custom;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ArchEvokerStaff extends Item {
+public class ArchEvokerStaff extends SwordItem {
     public ArchEvokerStaff(Settings settings) {
-        super(settings);
+        super(ToolMaterials.NETHERITE, 3, -3.2F, settings);
     }
 
     @Override
